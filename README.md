@@ -1,10 +1,3 @@
-# Talk template repo
+# MIDAS CDC 2023 - Delphi Ecosystem Demo
 
-This template can be used to create talks with a template that looks something
-like:
-
-https://dajmcdon.github.io/delphi-talk-template
-
-1. Create a new repo with this template.
-2. Under settings, enable Github pages on `main` with `/(root)` as the target.
-3. Done
+This repo contains a notebook demoing the Delphi Ecosystem for the MIDAS CDC November 2023 sync.
