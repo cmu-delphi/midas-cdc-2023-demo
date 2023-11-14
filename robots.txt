@@ -1,1 +1,1 @@
-Sitemap: https://cmu-delphi.github.io/midas-cdc-2023-demo/sitemap.xml
+Sitemap: https://github.com/cmu-delphi/midas-cdc-2023-demo/sitemap.xml
