@@ -2,6 +2,8 @@
 
 This repo contains a notebook demoing the Delphi Ecosystem for the MIDAS CDC November 2023 sync.
 
+View the rendered slides [here](https://cmu-delphi.github.io/midas-cdc-2023-demo/).
+
 ## Development
 
 You will need [Quarto](https://quarto.org/docs/get-started/) for this.
