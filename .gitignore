@@ -43,3 +43,6 @@ vignettes/*.pdf
 .Rproj.user
 .Rdata
 /.quarto/
+
+# Produced slides
+/index.html
