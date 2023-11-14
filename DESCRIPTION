@@ -1,0 +1,6 @@
+Package: midas-cdc-2023-demo
+Type: Project
+Title: {epidatr}, {epiprocess}
+Description: Presentation on epidatr+epiprocess for 2023-11 MIDAS/CDC meeting
+Encoding: UTF-8
+Imports: quarto
