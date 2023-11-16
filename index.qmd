@@ -15,5 +15,17 @@ execute:
 editor: source
 ---
 
-## Placeholder slide
+## What is `epidatr`?
+
+## Installation
+
+## API key setup
+
+## Accessing HHS data
+
+## Commonly-accessed data sources
+
+## Other useful data sources
+
+## Other endpoints
 
