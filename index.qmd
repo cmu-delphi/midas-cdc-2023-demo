@@ -110,9 +110,8 @@ epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, i
 
 Exclusive data including `chng` and `doctor-visits`
 
-## Other endpoints
+## Other endpoints: More than just COVID data!
 
-More than just COVID data!
 
 ```{r}
 #| eval: false
@@ -123,7 +122,8 @@ avail_endpoints()
 ```{r}
 #| eval: true
 #| echo: false
-avail_endpoints() %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid"))
+invisible(capture.output(endpts <- avail_endpoints()))
+endpts %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid"))
 ```
 
 
