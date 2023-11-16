@@ -15,7 +15,10 @@ execute:
 editor: source
 ---
 
-```{r setup, include=FALSE}
+```{r}
+#| include: false
+
+# setup
 pak::pkg_install("epidatr")
 library(epidatr)
 library(dplyr)
@@ -33,7 +36,9 @@ API](https://cmu-delphi.github.io/delphi-epidata/). It provides a simple R inter
 
 You can install the stable version of this package from CRAN:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+#| echo: true
 install.packages("epidatr")
 pak::pkg_install("epidatr")
 renv::install("epidatr")
@@ -41,7 +46,9 @@ renv::install("epidatr")
 
 Or if you want the development version, install from GitHub:
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+#| echo: true
 # Install the dev version using `pak` or `remotes`
 pak::pkg_install("cmu-delphi/epidatr")
 remotes::install_github("cmu-delphi/epidatr")
@@ -64,6 +71,8 @@ specific data use agreements to access.
 ## Accessing HHS data
 
 ```{r}
+#| echo: true
+#| eval: false
 # Obtain 7-day average of confirmed COVID-19 hospital admissions from the
 # Department of Health & Human Services for the US
 epidata <- pub_covidcast(
@@ -77,7 +86,25 @@ epidata <- pub_covidcast(
 epidata
 ```
 
+```{r}
+#| echo: false
+#| eval: true
+# Obtain 7-day average of confirmed COVID-19 hospital admissions from the
+# Department of Health & Human Services for the US
+epidata <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "nation",
+  time_type = "day",
+  geo_values = "us",
+  time_values = epirange(20230101, 20230601)
+)
+epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything())
+```
+
 ## Commonly-accessed data sources
+
+
 
 ## Other useful data sources
 
@@ -87,11 +114,15 @@ Exclusive data including `chng` and `doctor-visits`
 
 More than just COVID data!
 
-```{r, eval=FALSE}
+```{r}
+#| eval: false
+#| echo: true
 avail_endpoints()
 ```
 
-```{r, echo=FALSE}
+```{r}
+#| eval: true
+#| echo: false
 avail_endpoints() %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid"))
 ```
 
