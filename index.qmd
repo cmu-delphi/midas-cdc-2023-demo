@@ -91,7 +91,7 @@ renv::install("cmu-delphi/epidatr@dev")
 :::
 
 
-## Example: access HHS hospitalization data
+## Example: HHS hospitalization data
 
 - We can obtain the 7-day average of COVID-19 hospital admissions from the Department of Health & Human Services like so:
 
@@ -124,6 +124,48 @@ epidata %>%
   select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
   compact_print_tbl()
 ```
+
+- Note the key columns: `source, signal, geo_value, time_value`
+- `issue` is the date when the row started being valid (when it entered our database)
+
+
+## Example: versioned HHS hospitalization data
+
+- Here is what the same query looked like back in June ("as of" June 1st):
+
+```{r}
+#| echo: true
+#| eval: false
+epidata <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "nation",
+  time_type = "day",
+  geo_values = "us",
+  time_values = epirange(20230101, 20230601),
+  as_of = 20230601
+)
+epidata
+```
+
+```{r}
+#| echo: false
+#| eval: true
+epidata <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "nation",
+  time_type = "day",
+  geo_values = "us",
+  time_values = epirange(20230101, 20230601),
+  as_of = 20230601
+)
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  compact_print_tbl()
+```
+
+- Note that we have fewer rows now, reflecting the reality of data latency, and that the counts are slightly different, reflecting data revisions.
 
 
 ## Access other useful data, including Delphi-exclusive sources
