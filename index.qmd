@@ -100,7 +100,8 @@ To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/regist
 ```{r}
 #| eval: false
 #| echo: true
-set_api_key("personalkey")
+# This function will guide you in storing your API key.
+save_api_key()
 ```
 
 <br>
@@ -142,7 +143,9 @@ epidata <- pub_covidcast(
   geo_values = "us",
   time_values = epirange(20230101, 20230601)
 )
-epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>% compact_print_tbl
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  compact_print_tbl()
 ```
 
 
@@ -173,7 +176,9 @@ avail_endpoints()
 #| eval: true
 #| echo: false
 invisible(capture.output(endpts <- avail_endpoints()))
-endpts %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid")) %>% compact_print_tbl
+endpts %>%
+  filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid")) %>%
+  compact_print_tbl()
 ```
 
 
