@@ -158,7 +158,7 @@ epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, i
 - [`doctor-visits`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/doctor-visits.html) from health system partners
     - COVID signals from insurance claims
 - [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
-    - Historical behavioral and opinion signals
+    - Historical behaviors and beliefs signals
 
 
 ## Access more than just COVID data!
@@ -175,3 +175,6 @@ avail_endpoints()
 invisible(capture.output(endpts <- avail_endpoints()))
 endpts %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid")) %>% compact_print_tbl
 ```
+
+
+## Consider subscribing to the [Delphi API mailing list](https://lists.andrew.cmu.edu/mailman/listinfo/delphi-covidcast-api) to be notified of package updates, new data sources, corrections, and other updates
