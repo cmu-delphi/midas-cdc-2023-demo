@@ -37,12 +37,18 @@ library(epidatr)
 library(dplyr)
 ```
 
-## What is `{epidatr}`?
 
-The [Delphi Epidatr package](https://cmu-delphi.github.io/epidatr/) is an R front-end for the [Delphi Epidata API](https://cmu-delphi.github.io/delphi-epidata/), which provides real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases for the USA at various geographical resolutions, both from official government sources such as the [Center for Disease Control (CDC)](https://www.cdc.gov/datastatistics/index.html) and [Google Trends](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/google-symptoms.html) and private partners such as [Facebook](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) and [Change Healthcare](https://www.changehealthcare.com/). It is built and maintained by the Carnegie Mellon University [Delphi research group](https://delphi.cmu.edu/).
+## The [Delphi `{epidatr}` package](https://cmu-delphi.github.io/epidatr/) is a new R front-end for the [Delphi Epidata API](https://cmu-delphi.github.io/delphi-epidata/)
 
 This package is designed to streamline the downloading and usage of data from the [Delphi Epidata
-API](https://cmu-delphi.github.io/delphi-epidata/). It provides a simple R interface to the API, including functions for downloading data, parsing the results, and converting the data into a tidy format. The API stores a historical record of all data, including corrections and updates, which is particularly useful for accurately backtesting forecasting models. We also provide packages for downstream data processing ([epiprocess](https://github.com/cmu-delphi/epiprocess)) and modeling ([epipredict](https://github.com/cmu-delphi/epipredict)).
+API](https://cmu-delphi.github.io/delphi-epidata/). It provides a simple R interface to the API, including functions for downloading data, parsing the results, and converting the data into a tidy format.
+
+The API provides real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases, both from official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners. The API stores a historical record of all data, including corrections and updates, which is particularly useful for accurately backtesting forecasting models.
+
+
+## The `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use.
+
+The covidcast package is deprecated and will no longer be updated.
 
 
 ## Installation
@@ -122,6 +128,7 @@ epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, i
 ## Other useful data sources
 
 Exclusive data including `chng` and `doctor-visits`
+
 
 ## Other endpoints: More than just COVID data!
 
