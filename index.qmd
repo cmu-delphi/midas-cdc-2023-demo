@@ -23,7 +23,7 @@ editor: source
 #### Logan C. Brooks
 #### and CMU's Delphi Group
 
-Forecasting Tooling for CDC and MIDAS --- 21 November 2023
+CDC and MIDAS Forecasting Meeting --- 21 November 2023
 
 
 ## `{epidatr}`
@@ -35,6 +35,14 @@ Forecasting Tooling for CDC and MIDAS --- 21 November 2023
 pak::pkg_install("epidatr")
 library(epidatr)
 library(dplyr)
+
+compact_print_tbl <- function(df) {
+  # Drop extraneous tibble messages, from
+  # https://stackoverflow.com/a/64747799/14401472
+  #   - first position stores "tibble <size>" statement
+  #   - third position stores column classes
+  cat(format(df)[c(-1L, -3L)], sep = "\n")
+}
 ```
 
 
@@ -46,12 +54,12 @@ API](https://cmu-delphi.github.io/delphi-epidata/). It provides a simple R inter
 The API provides real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases, both from official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners. The API stores a historical record of all data, including corrections and updates, which is particularly useful for accurately backtesting forecasting models.
 
 
-## The `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use.
+## The `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use
 
 The covidcast package is deprecated and will no longer be updated.
 
 
-## Installation
+## Conveniently install in the normal ways
 
 You can install the stable version of this package from CRAN:
 
@@ -63,6 +71,9 @@ pak::pkg_install("epidatr")
 renv::install("epidatr")
 ```
 
+
+<br>
+
 Or if you want the development version, install from GitHub:
 
 ```{r}
@@ -73,12 +84,9 @@ remotes::install_github("cmu-delphi/epidatr")
 renv::install("cmu-delphi/epidatr")
 ```
 
-## The Delphi API requires a (free) API key for full functionality
+## `{epidatr}` requires a (free) API key for full functionality
 
-To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) 
-for a pseudo-anonymous account; see more
-discussion on the [general API
-website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html).
+To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account. See the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details.
 
 <br>
 
@@ -99,13 +107,12 @@ data use agreements to access.
 :::
 
 
-## Accessing HHS data
+## Access HHS hospitalization data
 
 ```{r}
 #| echo: true
 #| eval: false
-# Obtain 7-day average of confirmed COVID-19 hospital admissions from the
-# Department of Health & Human Services for the US
+# 7-day average of COVID-19 hospital admissions from the Department of Health & Human Services
 epidata <- pub_covidcast(
   source = "hhs",
   signals = "confirmed_admissions_covid_1d_7dav",
@@ -120,8 +127,6 @@ epidata
 ```{r}
 #| echo: false
 #| eval: true
-# Obtain 7-day average of confirmed COVID-19 hospital admissions from the
-# Department of Health & Human Services for the US
 epidata <- pub_covidcast(
   source = "hhs",
   signals = "confirmed_admissions_covid_1d_7dav",
@@ -130,20 +135,22 @@ epidata <- pub_covidcast(
   geo_values = "us",
   time_values = epirange(20230101, 20230601)
 )
-epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything())
+epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>% compact_print_tbl
 ```
 
-## Commonly-accessed data sources
+
+## Access popular data sources
 
 
 
-## Other useful data sources
+## Access other useful data, including Delphi-exclusive sources
 
-Exclusive data including `chng` and `doctor-visits`
+* [Change Healthcare](https://www.changehealthcare.com/)
+* `doctor-visits`
+* [Facebook](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/)
 
 
-## Other endpoints: More than just COVID data!
-
+## Access more than just COVID data!
 
 ```{r}
 #| eval: false
@@ -155,7 +162,5 @@ avail_endpoints()
 #| eval: true
 #| echo: false
 invisible(capture.output(endpts <- avail_endpoints()))
-endpts %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid"))
+endpts %>% filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid")) %>% compact_print_tbl
 ```
-
-
