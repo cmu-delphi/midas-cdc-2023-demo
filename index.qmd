@@ -13,6 +13,13 @@ format:
 execute:
   cache: true
 editor: source
+include-in-header:
+  - text: |
+      <style type="text/css">
+      ul li ul li {
+        font-size: 0.85em;
+      }
+      </style>
 ---
 
 
@@ -56,7 +63,7 @@ The API provides real-time access to epidemiological surveillance data for influ
 
 ## The `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use
 
-The covidcast package is deprecated and will no longer be updated.
+The {`covidcast`} package is deprecated and will no longer be updated.
 
 
 ## Conveniently install in the normal ways
@@ -141,13 +148,17 @@ epidata %>% select(geo_value, signal, source, geo_type, time_type, time_value, i
 
 ## Access popular data sources
 
+???
 
 
 ## Access other useful data, including Delphi-exclusive sources
 
-* [Change Healthcare](https://www.changehealthcare.com/)
-* `doctor-visits`
-* [Facebook](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/)
+- [`chng`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/chng.html) from [Change Healthcare](https://www.changehealthcare.com/)
+    - Outpatient COVID and flu signals from insurance claims
+- [`doctor-visits`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/doctor-visits.html) from health system partners
+    - COVID signals from insurance claims
+- [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
+    - Historical behavioral and opinion signals
 
 
 ## Access more than just COVID data!
