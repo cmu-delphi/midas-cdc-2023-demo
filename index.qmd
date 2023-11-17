@@ -32,9 +32,6 @@ include-in-header:
 
 CDC and MIDAS Forecasting Meeting --- 21 November 2023
 
-
-## `{epidatr}`
-
 ```{r}
 #| include: false
 
@@ -55,20 +52,19 @@ compact_print_tbl <- function(df) {
 
 ## The [Delphi `{epidatr}` package](https://cmu-delphi.github.io/epidatr/) is a new R front-end for the [Delphi Epidata API](https://cmu-delphi.github.io/delphi-epidata/)
 
-This package is designed to streamline the downloading and usage of data from the [Delphi Epidata
-API](https://cmu-delphi.github.io/delphi-epidata/). It provides a simple R interface to the API, including functions for downloading data, parsing the results, and converting the data into a tidy format.
-
-The API provides real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases, both from official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners. The API stores a historical record of all data, including corrections and updates, which is particularly useful for accurately backtesting forecasting models.
-
-
-## The `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use
-
-The {`covidcast`} package is deprecated and will no longer be updated.
+- streamlines downloading and usage of data from the [Delphi Epidata
+API](https://cmu-delphi.github.io/delphi-epidata/)
+  - real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases
+  - data from both official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners
+  - a historical record of all data available, including corrections and updates, which is useful for backtesting of forecasting models.
+- provides a simple R interface to the API, with functions for downloading data, parsing results, and converting to tidy format.
+  - the `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use
+  - the {`covidcast`} package is deprecated and will no longer be updated
 
 
 ## Conveniently install in the normal ways
 
-You can install the stable version of this package from CRAN:
+- You can install the stable version of this package from CRAN:
 
 ```{r}
 #| eval: false
@@ -78,10 +74,7 @@ pak::pkg_install("epidatr")
 renv::install("epidatr")
 ```
 
-
-<br>
-
-Or if you want the development version, install from GitHub:
+- Or if you want the development version, install from GitHub:
 
 ```{r}
 #| eval: false
@@ -91,9 +84,10 @@ remotes::install_github("cmu-delphi/epidatr", ref = "dev")
 renv::install("cmu-delphi/epidatr@dev")
 ```
 
+
 ## `{epidatr}` requires a (free) API key for full functionality
 
-To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account. See the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details.
+- To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account (see the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details)
 
 <br>
 
@@ -108,19 +102,20 @@ save_api_key()
 
 ::: {style="font-size: 75%;"}
 
-Note: the private endpoints (those prefixed with `pvt_`) require a
+Note: we also have private endpoints (those prefixed with `pvt_`) that require a
 separate key to be passed as an argument. These endpoints require
 data use agreements to access.
 
 :::
 
 
-## Access HHS hospitalization data
+## Example: access HHS hospitalization data
+
+- We can obtain the 7-day average of COVID-19 hospital admissions from the Department of Health & Human Services like so:
 
 ```{r}
 #| echo: true
 #| eval: false
-# 7-day average of COVID-19 hospital admissions from the Department of Health & Human Services
 epidata <- pub_covidcast(
   source = "hhs",
   signals = "confirmed_admissions_covid_1d_7dav",
