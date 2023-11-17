@@ -84,27 +84,9 @@ remotes::install_github("cmu-delphi/epidatr", ref = "dev")
 renv::install("cmu-delphi/epidatr@dev")
 ```
 
-
-## `{epidatr}` requires a (free) API key for full functionality
-
-- To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account (see the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details)
-
-<br>
-
-```{r}
-#| eval: false
-#| echo: true
-# This function will guide you in storing your API key.
-save_api_key()
-```
-
-<br>
-
-::: {style="font-size: 75%;"}
-
-Note: we also have private endpoints (those prefixed with `pvt_`) that require a
-separate key to be passed as an argument. These endpoints require
-data use agreements to access.
+- `{epidatr}` requires a (free) API key for full functionality
+  - To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account (see the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details) and use `save_api_key()` for help storing the key.
+  - (Note: we also have private endpoints (those prefixed with `pvt_`) that require a separate key to be passed as an argument. These endpoints require data use agreements to access.)
 
 :::
 
