@@ -86,9 +86,9 @@ Or if you want the development version, install from GitHub:
 ```{r}
 #| eval: false
 #| echo: true
-pak::pkg_install("cmu-delphi/epidatr")
-remotes::install_github("cmu-delphi/epidatr")
-renv::install("cmu-delphi/epidatr")
+pak::pkg_install("cmu-delphi/epidatr@dev")
+remotes::install_github("cmu-delphi/epidatr", ref = "dev")
+renv::install("cmu-delphi/epidatr@dev")
 ```
 
 ## `{epidatr}` requires a (free) API key for full functionality
