@@ -193,3 +193,98 @@ endpts %>%
 
 
 ## Consider subscribing to the [Delphi API mailing list](https://lists.andrew.cmu.edu/mailman/listinfo/delphi-covidcast-api) to be notified of package updates, new data sources, corrections, and other updates
+
+
+## The `{epiprocess}` package helps work with epidemic datasets
+
+```{r}
+#| include: false
+
+# setup
+pak::pkg_install("cmu-delphi/epiprocess@main")
+library(epiprocess)
+```
+
+```{r}
+#| eval: false
+#| echo: true
+pak::pkg_install("cmu-delphi/epiprocess@main")
+```
+
+- provides common data structures for epidemiological data sets measured over space and time
+- provides utilities for basic signal processing tasks
+
+
+## `epi_df`: a snapshot of epidata in time
+
+- represents the most up-to-date values of dataset as of a given time
+- a tibble with two required columns: `geo_value` and `time_value`
+- can have any number of other columns, which we call signal (or measured) variables
+- produce an `epi_df` from `epidatr` output like so:
+
+```{r}
+#| echo: true
+#| eval: true
+data <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "state",
+  time_type = "day",
+  geo_values = "ca,fl,ny,tx",
+  time_values = epirange(20230101, 20230601)
+)
+epi_df <- data %>% as_epi_df(
+  geo_type = "state",
+  time_type = "day",
+  as_of = max(data$issue)
+)
+epi_df
+```
+
+
+## `epi_archive`: a collection of historical epidata
+
+- represents the most up-to-date values of dataset as of a given time
+- a tibble with two required columns: `geo_value` and `time_value`
+- can have any number of other columns, which we call signal (or measured) variables
+
+```{r}
+#| echo: true
+#| eval: true
+data <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "state",
+  time_type = "day",
+  geo_values = "ca,fl,ny,tx",
+  time_values = epirange(20230101, 20230601),
+  issues = epirange(20230101, 20230601)
+)
+epi_archive <- data %>%
+  select(
+    geo_value, time_value,
+    version = issue, admissions = value
+  ) %>%
+  as_epi_archive(compactify = TRUE)
+epi_archive
+```
+
+
+## `epi_df` and `epi_archive` utilities
+
+- `epi_df`
+  - `group_by()` - standard grouped operations
+  - `epi_slide()` - rolling window computations over variables in an `epi_df`
+  - `epi_cor()` - compute correlations between variables in an `epi_df`
+- `epi_archive`
+  - `group_by()` - standard grouped operations
+  - `epix_slide()` - rolling window computations over variables in an `epi_archive`
+  - `epix_as_of()` - generate a snapshot `epi_df` from an `epi_archive` object
+  - `epix_fill_through_version()` - fill `epi_archive` with unobserved history
+  - `epix_merge()` - merge two `epi_archive` objects
+
+
+## Resources for recipes
+
+- [epiprocess documentation](https://cmu-delphi.github.io/epiprocess/index.html)
+- [Delphi Epidemiological Forecasting Book](https://cmu-delphi.github.io/delphi-tooling-book/epiprocess.html)
