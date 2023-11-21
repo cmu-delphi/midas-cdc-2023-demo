@@ -116,7 +116,7 @@ epidata <- pub_covidcast(
 #| echo: false
 #| eval: true
 epidata %>%
-  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  select(signal, source, geo_type, time_type, geo_value, time_value, issue, lag, value, everything()) %>%
   print(n = 5L)
 ```
 
@@ -157,7 +157,7 @@ epidata <- pub_covidcast(
 #| echo: false
 #| eval: true
 epidata %>%
-  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  select(signal, source, geo_type, time_type, geo_value, time_value, issue, lag, value, everything()) %>%
   print(n = 5L)
 ```
 
