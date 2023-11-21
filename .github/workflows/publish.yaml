@@ -9,7 +9,7 @@ jobs:
     build-deploy:
         runs-on: ubuntu-latest
         env: 
-            DELPHI_API_KEY: ${{ secrets.REPO_DELPHI_API_KEY }}
+            DELPHI_EPIDATA_KEY: ${{ secrets.REPO_DELPHI_API_KEY }}
         permissions:
             contents: write
         steps:
