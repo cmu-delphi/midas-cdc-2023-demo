@@ -229,7 +229,7 @@ tbl <- pub_covidcast(
   geo_type = "state",
   time_type = "day",
   geo_values = "ca,fl,ny,tx",
-  time_values = epirange(20230101, 20230601)
+  time_values = epirange("2023-01-01", "2023-06-01")
 )
 epi_df <- tbl %>%
   # Add NAs to fill gaps, cover same time range for each geo:
@@ -252,7 +252,7 @@ epi_df
 
 - represents the most up-to-date values of dataset as of various given times
 - required input columns: `geo_value`, `time_value`, `version`
-- can have any number of other columns, which we call signal (or measured) variables
+- can have any number of other key or signal/measured columns
 
 ## `epi_archive`: a collection of historical epidata
 
@@ -265,14 +265,15 @@ tbl <- pub_covidcast(
   geo_type = "state",
   time_type = "day",
   geo_values = "ca,fl,ny,tx",
-  time_values = epirange(20230101, 20230601),
-  issues = epirange(12340101, 20230601) # start of range must be before data set start
+  time_values = "*", # "*" = all time values
+  issues = epirange("1234-01-01", "2023-06-01") # start of range must be before data set start
 )
 epi_archive <- tbl %>%
   select(
     geo_value, time_value,
     version = issue, admissions = value
   ) %>%
+  # don't try to `complete` here; `complete` after `epix_as_of` or inside `epix_slide` computations
   as_epi_archive(compactify = TRUE)
 ```
 
@@ -290,22 +291,39 @@ epi_archive
 epi_archive$DT
 ```
 
+## Some `epi_slide` use cases
+
+- Calculate rolling or running averages, sums, other statistics
+- Calculate custom growth rates, categorical trend definitions, smoothing (see
+  also `epiprocess::growth_rate`, `epipredict::step_lag_difference`)
+- (Perform latency&revision-naive forecaster backtesting)
+
+## Some `epix_as_of`, `epix_slide` use cases
+
+- Better backtesting: generate pseudoprospective forecasts
+- Plot past forecast against data available at generation time
+- Plot evolution of how a time series was reported
+- Analyze reporting latency, revision behavior, trends
+- Improve forecasts when revisions are significant: prepare "version-analogous" training set predictor data
 
 ## `epi_df` and `epi_archive` utilities
 
 - `epi_df`
   - `group_by()` - standard grouped operations
-  - `epi_slide()` - rolling window computations over variables in an `epi_df`
+  - `epi_slide()` - perform (grouped) time-window computations on an `epi_df`
   - `epi_cor()` - compute correlations between variables in an `epi_df`
 - `epi_archive`
-  - `group_by()` - standard grouped operations
-  - `epix_slide()` - rolling window computations over variables in an `epi_archive`
+  - `epix_merge()` - merge/join two `epi_archive` objects
   - `epix_as_of()` - generate a snapshot `epi_df` from an `epi_archive` object
-  - `epix_fill_through_version()` - fill `epi_archive` with unobserved history
-  - `epix_merge()` - merge two `epi_archive` objects
+  - `group_by()` - standard grouped operations
+  - `epix_slide()` - perform (grouped) time-windowed computations on several versions
+- And more, including outlier detection^[functionality contributed by Evan Ray], growth rate calculation.
 
+## Resources
 
-## Resources for recipes
-
+- [epidatr (stable) documentation](https://cmu-delphi.github.io/epidatr/index.html)
+- [epidatr (dev) documentation](https://cmu-delphi.github.io/epidatr/dev/index.html)
+- [COVIDcast data source listing](https://cmu-delphi.github.io/delphi-epidata/api/covidcast_signals.html)
+- [Other Delphi Epidata API endpoints](https://cmu-delphi.github.io/delphi-epidata/api/README.html)
 - [epiprocess documentation](https://cmu-delphi.github.io/epiprocess/index.html)
 - [Delphi Epidemiological Forecasting Book](https://cmu-delphi.github.io/delphi-tooling-book/epiprocess.html)
