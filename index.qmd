@@ -27,8 +27,8 @@ include-in-header:
 
 <br>
 
-#### Logan C. Brooks
-#### and CMU's Delphi Group
+#### Delphi Research Group at CMU
+#### Slides: Nat DeFries, Dmitry Shemetov, Logan Brooks, others on Delphi tooling team
 
 CDC and MIDAS Forecasting Meeting --- 21 November 2023
 
@@ -58,8 +58,8 @@ API](https://cmu-delphi.github.io/delphi-epidata/)
   - data from both official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners
   - a historical record of all data available, including corrections and updates, which is useful for backtesting of forecasting models.
 - provides a simple R interface to the API, with functions for downloading data, parsing results, and converting to tidy format.
-  - the `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/), with a focus on speed, reliability, and ease of use
-  - the {`covidcast`} package is deprecated and will no longer be updated
+  - the `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/) and `delphi_epidata.R` script, with a focus on speed, reliability, and ease of use
+  - the {`covidcast`} package and `delphi_epidata.R` script are deprecated and will no longer be updated
 
 
 ## Conveniently install in the normal ways
@@ -91,26 +91,12 @@ renv::install("cmu-delphi/epidatr@dev")
 :::
 
 
-## Example: HHS hospitalization data
+## Example: HHS/NHSN hospitalization data
 
-- We can obtain the 7-day average of COVID-19 hospital admissions from the Department of Health & Human Services like so:
+- Fetch a seven-day average of national COVID-19 hospital admissions:
 
 ```{r}
 #| echo: true
-#| eval: false
-epidata <- pub_covidcast(
-  source = "hhs",
-  signals = "confirmed_admissions_covid_1d_7dav",
-  geo_type = "nation",
-  time_type = "day",
-  geo_values = "us",
-  time_values = epirange(20230101, 20230601)
-)
-epidata
-```
-
-```{r}
-#| echo: false
 #| eval: true
 epidata <- pub_covidcast(
   source = "hhs",
@@ -119,37 +105,39 @@ epidata <- pub_covidcast(
   time_type = "day",
   geo_values = "us",
   time_values = epirange(20230101, 20230601)
+  # (by default, fetches the current version)
 )
-epidata %>%
-  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
-  compact_print_tbl()
-```
-
-- Note the key columns: `source, signal, geo_value, time_value`
-- `issue` is the date when the row started being valid (when it entered our database)
-
-
-## Example: versioned HHS hospitalization data
-
-- Here is what the same query looked like back in June ("as of" June 1st):
-
-```{r}
-#| echo: true
-#| eval: false
-epidata <- pub_covidcast(
-  source = "hhs",
-  signals = "confirmed_admissions_covid_1d_7dav",
-  geo_type = "nation",
-  time_type = "day",
-  geo_values = "us",
-  time_values = epirange(20230101, 20230601),
-  as_of = 20230601
-)
-epidata
+# `epidata` looks like:
 ```
 
 ```{r}
 #| echo: false
+#| eval: true
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  print(n = 5L)
+```
+
+<!-- ## Example: HHS/NHSN hospitalization data -->
+
+<!-- ```{r} -->
+<!-- #| echo: false -->
+<!-- #| eval: true -->
+<!-- epidata %>% -->
+<!--   select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>% -->
+<!--   print(n = 5L) -->
+<!-- ``` -->
+
+<!-- - Note the key columns: `source, signal, geo_value, time_value` -->
+<!-- - `issue` is the date when the row started being valid (when it entered our database^[Usually; exceptions include adding back issues for a new data set and patching to better match upstream history.]) -->
+
+
+## Example: versioned HHS/NHSN hospitalization data
+
+- Fetch what the query should have looked like back in June ("as of" June 1st):
+
+```{r}
+#| echo: true
 #| eval: true
 epidata <- pub_covidcast(
   source = "hhs",
@@ -160,12 +148,18 @@ epidata <- pub_covidcast(
   time_values = epirange(20230101, 20230601),
   as_of = 20230601
 )
-epidata %>%
-  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
-  compact_print_tbl()
+# `epidata` looks like:
 ```
 
-- Note that we have fewer rows now, reflecting the reality of data latency, and that the counts are slightly different, reflecting data revisions.
+```{r}
+#| echo: false
+#| eval: true
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  print(n = 5L)
+```
+
+<!-- - Note that we have fewer rows now, reflecting the reality of data latency, and that the counts are slightly different, reflecting data revisions. -->
 
 
 ## Access other useful data, including Delphi-exclusive sources
@@ -174,7 +168,7 @@ epidata %>%
     - Outpatient COVID and influenza signals from insurance claims
 - [`doctor-visits`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/doctor-visits.html) from health system partners
     - COVID signals from insurance claims
-- [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
+- [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from (parts of) the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
     - Signals of public behaviors and beliefs about public health during the pandemic
 
 
@@ -218,14 +212,18 @@ pak::pkg_install("cmu-delphi/epiprocess@main")
 ## `epi_df`: a snapshot of epidata in time
 
 - represents the most up-to-date values of dataset as of a given time
-- a tibble with two required columns: `geo_value` and `time_value`
+- a subclassed tibble with two required columns: `geo_value` and `time_value`
+- and associated metadata: `geo_type`, `time_type`, `other_keys`, `as_of`
 - can have any number of other columns, which we call signal (or measured) variables
-- produce an `epi_df` from `epidatr` output like so:
+
+## `epi_df`: a snapshot of epidata in time
+
+Produce an `epi_df` from `epidatr` output like so:
 
 ```{r}
 #| echo: true
 #| eval: true
-data <- pub_covidcast(
+tbl <- pub_covidcast(
   source = "hhs",
   signals = "confirmed_admissions_covid_1d_7dav",
   geo_type = "state",
@@ -233,40 +231,63 @@ data <- pub_covidcast(
   geo_values = "ca,fl,ny,tx",
   time_values = epirange(20230101, 20230601)
 )
-epi_df <- data %>% as_epi_df(
-  geo_type = "state",
-  time_type = "day",
-  as_of = max(data$issue)
-)
+epi_df <- tbl %>%
+  # Add NAs to fill gaps, cover same time range for each geo:
+  tidyr::complete(geo_value, time_value = tidyr::full_seq(time_value, period = 1L)) %>%
+  as_epi_df(
+    geo_type = "state",
+    time_type = "day",
+    as_of = max(tbl$issue)
+  )
+```
+
+## `epi_df`: a snapshot of epidata in time
+
+```{r}
+#| echo: true
 epi_df
 ```
 
-
 ## `epi_archive`: a collection of historical epidata
 
-- represents the most up-to-date values of dataset as of a given time
-- a tibble with two required columns: `geo_value` and `time_value`
+- represents the most up-to-date values of dataset as of various given times
+- required input columns: `geo_value`, `time_value`, `version`
 - can have any number of other columns, which we call signal (or measured) variables
+
+## `epi_archive`: a collection of historical epidata
 
 ```{r}
 #| echo: true
 #| eval: true
-data <- pub_covidcast(
+tbl <- pub_covidcast(
   source = "hhs",
   signals = "confirmed_admissions_covid_1d_7dav",
   geo_type = "state",
   time_type = "day",
   geo_values = "ca,fl,ny,tx",
   time_values = epirange(20230101, 20230601),
-  issues = epirange(20230101, 20230601)
+  issues = epirange(12340101, 20230601) # start of range must be before data set start
 )
-epi_archive <- data %>%
+epi_archive <- tbl %>%
   select(
     geo_value, time_value,
     version = issue, admissions = value
   ) %>%
   as_epi_archive(compactify = TRUE)
+```
+
+## `epi_archive`: a collection of historical epidata
+
+```{r}
+#| echo: true
 epi_archive
+```
+
+## `epi_archive`: a collection of historical epidata
+
+```{r}
+#| echo: true
+epi_archive$DT
 ```
 
 
