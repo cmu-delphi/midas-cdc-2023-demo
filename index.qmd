@@ -106,13 +106,13 @@ epidata <- pub_covidcast(
   geo_type = "nation",
   time_type = "day",
   geo_values = "*",
-  time_values = "*"
+  time_values = epirange("2023-01-01", "2023-06-01")
   # (by default, fetches the current version)
 )
 # `epidata` looks like:
 ```
 
-```{r}
+```{r cache.extra = epidata}
 #| echo: false
 #| eval: true
 epidata %>%
@@ -147,13 +147,13 @@ epidata <- pub_covidcast(
   geo_type = "nation",
   time_type = "day",
   geo_values = "*",
-  time_values = "*",
+  time_values = epirange("2023-01-01", "2023-06-01"),
   as_of = "2023-06-01"
 )
 # `epidata` looks like:
 ```
 
-```{r}
+```{r cache.extra = epidata}
 #| echo: false
 #| eval: true
 epidata %>%
@@ -246,7 +246,7 @@ epi_df <- tbl %>%
 
 ## `epi_df`: a snapshot of epidata in time
 
-```{r}
+```{r cache.extra = epi_df}
 #| echo: true
 epi_df
 ```
@@ -282,6 +282,7 @@ epi_archive <- tbl %>%
 
 ## `epi_archive`: a collection of historical epidata
 
+ <!-- cache.extra = epi_archive generates error -->
 ```{r}
 #| echo: true
 epi_archive
@@ -289,6 +290,7 @@ epi_archive
 
 ## `epi_archive`: a collection of historical epidata
 
+ <!-- cache.extra = epi_archive generates error -->
 ```{r}
 #| echo: true
 epi_archive$DT
