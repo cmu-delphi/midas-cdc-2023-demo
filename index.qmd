@@ -13,7 +13,299 @@ format:
 execute:
   cache: true
 editor: source
+include-in-header:
+  - text: |
+      <style type="text/css">
+      ul li ul li {
+        font-size: 0.85em;
+      }
+      </style>
 ---
 
-## Placeholder slide
 
+##  Finding, fetching, and processing epidemiological data with `{epidatr}` and `{epiprocess}`
+
+<br>
+
+#### Delphi Research Group at CMU
+#### Slides: Nat DeFries, Dmitry Shemetov, Logan Brooks, others on Delphi tooling team
+
+CDC and MIDAS Forecasting Meeting --- 21 November 2023
+
+```{r}
+#| include: false
+
+# setup
+pak::pkg_install("epidatr")
+library(epidatr)
+library(dplyr)
+
+compact_print_tbl <- function(df) {
+  # Drop extraneous tibble messages, from
+  # https://stackoverflow.com/a/64747799/14401472
+  #   - first position stores "tibble <size>" statement
+  #   - third position stores column classes
+  cat(format(df)[c(-1L, -3L)], sep = "\n")
+}
+```
+
+
+## The [Delphi `{epidatr}` package](https://cmu-delphi.github.io/epidatr/) is a new R front-end for the [Delphi Epidata API](https://cmu-delphi.github.io/delphi-epidata/)
+
+- streamlines downloading and usage of data from the [Delphi Epidata
+API](https://cmu-delphi.github.io/delphi-epidata/)
+  - real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases
+  - data from both official government sources such as the [CDC](https://www.cdc.gov/datastatistics/index.html) and from private partners
+  - a historical record of all data available, including corrections and updates, which is useful for backtesting of forecasting models.
+- provides a simple R interface to the API, with functions for downloading data, parsing results, and converting to tidy format.
+  - the `{epidatr}` package is a complete rewrite of the [`{covidcast}` package](https://cmu-delphi.github.io/covidcast/covidcastR/) and `delphi_epidata.R` script, with a focus on speed, reliability, and ease of use
+  - the {`covidcast`} package and `delphi_epidata.R` script are deprecated and will no longer be updated
+
+
+## Conveniently install in the normal ways
+
+- You can install the stable version of this package from CRAN:
+
+```{r}
+#| eval: false
+#| echo: true
+install.packages("epidatr")
+pak::pkg_install("epidatr")
+renv::install("epidatr")
+```
+
+- Or if you want the development version, install from GitHub:
+
+```{r}
+#| eval: false
+#| echo: true
+pak::pkg_install("cmu-delphi/epidatr@dev")
+remotes::install_github("cmu-delphi/epidatr", ref = "dev")
+renv::install("cmu-delphi/epidatr@dev")
+```
+
+- `{epidatr}` requires a (free) API key for full functionality
+  - To generate your key, [register](https://api.delphi.cmu.edu/epidata/admin/registration_form) for a pseudo-anonymous account (see the [general API website](https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html) for details) and use `save_api_key()` for help storing the key.
+  - (Note: we also have private endpoints (those prefixed with `pvt_`) that require a separate key to be passed as an argument. These endpoints require data use agreements to access.)
+
+:::
+
+
+## Example: HHS/NHSN hospitalization data
+
+- Fetch a seven-day average of national COVID-19 hospital admissions:
+
+```{r}
+#| echo: true
+#| eval: true
+epidata <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "nation",
+  time_type = "day",
+  geo_values = "us",
+  time_values = epirange(20230101, 20230601)
+  # (by default, fetches the current version)
+)
+# `epidata` looks like:
+```
+
+```{r}
+#| echo: false
+#| eval: true
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  print(n = 5L)
+```
+
+<!-- ## Example: HHS/NHSN hospitalization data -->
+
+<!-- ```{r} -->
+<!-- #| echo: false -->
+<!-- #| eval: true -->
+<!-- epidata %>% -->
+<!--   select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>% -->
+<!--   print(n = 5L) -->
+<!-- ``` -->
+
+<!-- - Note the key columns: `source, signal, geo_value, time_value` -->
+<!-- - `issue` is the date when the row started being valid (when it entered our database^[Usually; exceptions include adding back issues for a new data set and patching to better match upstream history.]) -->
+
+
+## Example: versioned HHS/NHSN hospitalization data
+
+- Fetch what the query should have looked like back in June ("as of" June 1st):
+
+```{r}
+#| echo: true
+#| eval: true
+epidata <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "nation",
+  time_type = "day",
+  geo_values = "us",
+  time_values = epirange(20230101, 20230601),
+  as_of = 20230601
+)
+# `epidata` looks like:
+```
+
+```{r}
+#| echo: false
+#| eval: true
+epidata %>%
+  select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>%
+  print(n = 5L)
+```
+
+<!-- - Note that we have fewer rows now, reflecting the reality of data latency, and that the counts are slightly different, reflecting data revisions. -->
+
+
+## Access other useful data, including Delphi-exclusive sources
+
+- [`chng`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/chng.html) from [Change Healthcare](https://www.changehealthcare.com/)
+    - Outpatient COVID and influenza signals from insurance claims
+- [`doctor-visits`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/doctor-visits.html) from health system partners
+    - COVID signals from insurance claims
+- [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from (parts of) the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
+    - Signals of public behaviors and beliefs about public health during the pandemic
+
+
+## Access more than just COVID data!
+
+Using `avail_endpoints()` you can find a listing of our other endpoints that serve a wide variety of public health data.
+
+```{r}
+#| eval: true
+#| echo: false
+invisible(capture.output(endpts <- avail_endpoints()))
+endpts %>%
+  filter(startsWith(Endpoint, "pub_"), !startsWith(Endpoint, "pub_covid")) %>%
+  compact_print_tbl()
+```
+
+
+## Consider subscribing to the [Delphi API mailing list](https://lists.andrew.cmu.edu/mailman/listinfo/delphi-covidcast-api) to be notified of package updates, new data sources, corrections, and other updates
+
+
+## The `{epiprocess}` package helps work with epidemic datasets
+
+```{r}
+#| include: false
+
+# setup
+pak::pkg_install("cmu-delphi/epiprocess@main")
+library(epiprocess)
+```
+
+```{r}
+#| eval: false
+#| echo: true
+pak::pkg_install("cmu-delphi/epiprocess@main")
+```
+
+- provides common data structures for epidemiological data sets measured over space and time
+- provides utilities for basic signal processing tasks
+
+
+## `epi_df`: a snapshot of epidata in time
+
+- represents the most up-to-date values of dataset as of a given time
+- a subclassed tibble with two required columns: `geo_value` and `time_value`
+- and associated metadata: `geo_type`, `time_type`, `other_keys`, `as_of`
+- can have any number of other columns, which we call signal (or measured) variables
+
+## `epi_df`: a snapshot of epidata in time
+
+Produce an `epi_df` from `epidatr` output like so:
+
+```{r}
+#| echo: true
+#| eval: true
+tbl <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "state",
+  time_type = "day",
+  geo_values = "ca,fl,ny,tx",
+  time_values = epirange(20230101, 20230601)
+)
+epi_df <- tbl %>%
+  # Add NAs to fill gaps, cover same time range for each geo:
+  tidyr::complete(geo_value, time_value = tidyr::full_seq(time_value, period = 1L)) %>%
+  as_epi_df(
+    geo_type = "state",
+    time_type = "day",
+    as_of = max(tbl$issue)
+  )
+```
+
+## `epi_df`: a snapshot of epidata in time
+
+```{r}
+#| echo: true
+epi_df
+```
+
+## `epi_archive`: a collection of historical epidata
+
+- represents the most up-to-date values of dataset as of various given times
+- required input columns: `geo_value`, `time_value`, `version`
+- can have any number of other columns, which we call signal (or measured) variables
+
+## `epi_archive`: a collection of historical epidata
+
+```{r}
+#| echo: true
+#| eval: true
+tbl <- pub_covidcast(
+  source = "hhs",
+  signals = "confirmed_admissions_covid_1d_7dav",
+  geo_type = "state",
+  time_type = "day",
+  geo_values = "ca,fl,ny,tx",
+  time_values = epirange(20230101, 20230601),
+  issues = epirange(12340101, 20230601) # start of range must be before data set start
+)
+epi_archive <- tbl %>%
+  select(
+    geo_value, time_value,
+    version = issue, admissions = value
+  ) %>%
+  as_epi_archive(compactify = TRUE)
+```
+
+## `epi_archive`: a collection of historical epidata
+
+```{r}
+#| echo: true
+epi_archive
+```
+
+## `epi_archive`: a collection of historical epidata
+
+```{r}
+#| echo: true
+epi_archive$DT
+```
+
+
+## `epi_df` and `epi_archive` utilities
+
+- `epi_df`
+  - `group_by()` - standard grouped operations
+  - `epi_slide()` - rolling window computations over variables in an `epi_df`
+  - `epi_cor()` - compute correlations between variables in an `epi_df`
+- `epi_archive`
+  - `group_by()` - standard grouped operations
+  - `epix_slide()` - rolling window computations over variables in an `epi_archive`
+  - `epix_as_of()` - generate a snapshot `epi_df` from an `epi_archive` object
+  - `epix_fill_through_version()` - fill `epi_archive` with unobserved history
+  - `epix_merge()` - merge two `epi_archive` objects
+
+
+## Resources for recipes
+
+- [epiprocess documentation](https://cmu-delphi.github.io/epiprocess/index.html)
+- [Delphi Epidemiological Forecasting Book](https://cmu-delphi.github.io/delphi-tooling-book/epiprocess.html)
