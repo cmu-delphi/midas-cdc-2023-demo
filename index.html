@@ -402,6 +402,7 @@
 <h4 id="delphi-research-group-at-cmu">Delphi Research Group at CMU</h4>
 <h4 id="slides-nat-defries-dmitry-shemetov-logan-brooks-others-on-delphi-tooling-team">Slides: Nat DeFries, Dmitry Shemetov, Logan Brooks, others on Delphi tooling team</h4>
 <p>CDC and MIDAS Forecasting Meeting — 21 November 2023</p>
+<p>Slides are online at <a href="https://cmu-delphi.github.io/midas-cdc-2023-demo" class="uri">https://cmu-delphi.github.io/midas-cdc-2023-demo</a></p>
 </section>
 <section id="the-delphi-epidatr-package-is-a-new-r-front-end-for-the-delphi-epidata-api" class="slide level2">
 <h2>The <a href="https://cmu-delphi.github.io/epidatr/">Delphi <code>{epidatr}</code> package</a> is a new R front-end for the <a href="https://cmu-delphi.github.io/delphi-epidata/">Delphi Epidata API</a></h2>
@@ -449,16 +450,16 @@
 <section id="example-hhsnhsn-hospitalization-data" class="slide level2">
 <h2>Example: HHS/NHSN hospitalization data</h2>
 <ul>
-<li>Fetch a seven-day average of national COVID-19 hospital admissions:</li>
+<li>Fetch national COVID-19 hospital admissions:</li>
 </ul>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-4_af11c14d8b774583d287ec81f406d705">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-4_cf0b964d7556aafdc14f751be60c115f">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb3-2"><a href="#cb3-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
 <span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="dv">20230101</span>, <span class="dv">20230601</span>)</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>)</span>
 <span id="cb3-8"><a href="#cb3-8"></a>  <span class="co"># (by default, fetches the current version)</span></span>
 <span id="cb3-9"><a href="#cb3-9"></a>)</span>
 <span id="cb3-10"><a href="#cb3-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -468,11 +469,11 @@
 <pre><code># A tibble: 152 × 15
   geo_value signal   source geo_type time_type time_value issue        lag value
   &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
-1 us        confirm… hhs    nation   day       2023-01-01 2023-10-26   298 6794.
-2 us        confirm… hhs    nation   day       2023-01-02 2023-11-17   319 6810.
-3 us        confirm… hhs    nation   day       2023-01-03 2023-11-17   318 6778.
-4 us        confirm… hhs    nation   day       2023-01-04 2023-11-17   317 6695 
-5 us        confirm… hhs    nation   day       2023-01-05 2023-11-17   316 6585.
+1 us        confirm… hhs    nation   day       2023-01-01 2023-10-03   275  6078
+2 us        confirm… hhs    nation   day       2023-01-02 2023-11-17   319  6727
+3 us        confirm… hhs    nation   day       2023-01-03 2023-11-17   318  6932
+4 us        confirm… hhs    nation   day       2023-01-04 2023-11-11   311  6693
+5 us        confirm… hhs    nation   day       2023-01-05 2023-11-17   316  6609
 # ℹ 147 more rows
 # ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
 #   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
@@ -495,14 +496,14 @@
 <ul>
 <li>Fetch what the query should have looked like back in June (“as of” June 1st):</li>
 </ul>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-6_6445ffd618dd02ca0a9bec2c68395f23">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-6_c46589268ab1868f8c32ada5c6dac2a8">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
 <span id="cb5-5"><a href="#cb5-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
 <span id="cb5-6"><a href="#cb5-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="dv">20230101</span>, <span class="dv">20230601</span>),</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>),</span>
 <span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">as_of =</span> <span class="dv">20230601</span></span>
 <span id="cb5-9"><a href="#cb5-9"></a>)</span>
 <span id="cb5-10"><a href="#cb5-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -512,11 +513,11 @@
 <pre><code># A tibble: 150 × 15
   geo_value signal   source geo_type time_type time_value issue        lag value
   &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
-1 us        confirm… hhs    nation   day       2023-01-01 2023-06-01   151 6777 
-2 us        confirm… hhs    nation   day       2023-01-02 2023-06-01   150 6792.
-3 us        confirm… hhs    nation   day       2023-01-03 2023-06-01   149 6758.
-4 us        confirm… hhs    nation   day       2023-01-04 2023-06-01   148 6673 
-5 us        confirm… hhs    nation   day       2023-01-05 2023-06-01   147 6561.
+1 us        confirm… hhs    nation   day       2023-01-01 2023-05-19   138  6058
+2 us        confirm… hhs    nation   day       2023-01-02 2023-06-01   150  6713
+3 us        confirm… hhs    nation   day       2023-01-03 2023-06-01   149  6893
+4 us        confirm… hhs    nation   day       2023-01-04 2023-06-01   148  6657
+5 us        confirm… hhs    nation   day       2023-01-05 2023-06-01   147  6587
 # ℹ 145 more rows
 # ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
 #   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
@@ -541,10 +542,11 @@
 <li>Signals of public behaviors and beliefs about public health during the pandemic</li>
 </ul></li>
 </ul>
+<p>See also <code>covidcast_epidata()</code> or the <a href="https://cmu-delphi.github.io/delphi-epidata/api/covidcast_signals.html">COVIDcast web site</a> for a listing of other COVIDcast data available.</p>
 </section>
 <section id="access-more-than-just-covid-data" class="slide level2">
 <h2>Access more than just COVID data!</h2>
-<p>Using <code>avail_endpoints()</code> you can find a listing of our other endpoints that serve a wide variety of public health data.</p>
+<p>Using <code>avail_endpoints()</code> you can find a listing of our other endpoints that serve a wide variety of public health data. Here we’ve filtered to non-COVID-specific data.</p>
 <div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-8_35f9dd8a4776d97571f7f8607f897ad0">
 <div class="cell-output cell-output-stdout">
 <pre><code>   Endpoint               Description                                
@@ -591,10 +593,10 @@
 <section id="epi_df-a-snapshot-of-epidata-in-time-1" class="slide level2">
 <h2><code>epi_df</code>: a snapshot of epidata in time</h2>
 <p>Produce an <code>epi_df</code> from <code>epidatr</code> output like so:</p>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-11_181f110a35299ace2c82efe802469b10">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-11_11dce5ae51bbb9890459dc32b47ea6c4">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
 <span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
 <span id="cb9-6"><a href="#cb9-6"></a>  <span class="at">geo_values =</span> <span class="st">"ca,fl,ny,tx"</span>,</span>
@@ -625,14 +627,14 @@
  * &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;         &lt;dbl&gt; &lt;date&gt;    
  1 ca        2023-01-01 confirme… hhs    state    day              NA 2023-04-30
  2 ca        2023-01-02 confirme… hhs    state    day              NA 2023-04-30
- 3 ca        2023-01-03 confirme… hhs    state    day              NA 2023-04-30
- 4 ca        2023-01-04 confirme… hhs    state    day              NA 2023-04-30
+ 3 ca        2023-01-03 confirme… hhs    state    day              NA 2023-04-13
+ 4 ca        2023-01-04 confirme… hhs    state    day              NA 2023-04-13
  5 ca        2023-01-05 confirme… hhs    state    day              NA 2023-04-30
- 6 ca        2023-01-06 confirme… hhs    state    day              NA 2023-04-30
- 7 ca        2023-01-07 confirme… hhs    state    day              NA 2023-04-30
+ 6 ca        2023-01-06 confirme… hhs    state    day              NA 2023-04-13
+ 7 ca        2023-01-07 confirme… hhs    state    day              NA 2023-04-13
  8 ca        2023-01-08 confirme… hhs    state    day              NA 2023-04-30
  9 ca        2023-01-09 confirme… hhs    state    day              NA 2023-04-30
-10 ca        2023-01-10 confirme… hhs    state    day              NA 2023-04-30
+10 ca        2023-01-10 confirme… hhs    state    day              NA 2023-04-13
 # ℹ 598 more rows
 # ℹ 7 more variables: lag &lt;int&gt;, missing_value &lt;int&gt;, missing_stderr &lt;int&gt;,
 #   missing_sample_size &lt;int&gt;, value &lt;dbl&gt;, stderr &lt;dbl&gt;, sample_size &lt;dbl&gt;</code></pre>
@@ -649,10 +651,10 @@
 </section>
 <section id="epi_archive-a-collection-of-historical-epidata-1" class="slide level2">
 <h2><code>epi_archive</code>: a collection of historical epidata</h2>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-13_3351924c8571a1fbf7439912bcc4e502">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-13_bd64f6e7c6a88064fe64605661a01b2f">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb12-2"><a href="#cb12-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
-<span id="cb12-3"><a href="#cb12-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb12-4"><a href="#cb12-4"></a>  <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
 <span id="cb12-5"><a href="#cb12-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
 <span id="cb12-6"><a href="#cb12-6"></a>  <span class="at">geo_values =</span> <span class="st">"ca,fl,ny,tx"</span>,</span>
@@ -677,14 +679,14 @@
 * geo_type  = state
 * time_type = day
 ----------
-* min time value = 2020-01-06
+* min time value = 2019-12-31
 * max time value = 2023-05-30
 * first version with update = 2020-11-16
 * last version with update = 2023-06-01
 * No clobberable versions
 * versions end   = 2023-06-01
 ----------
-Data archive (stored in DT field): 40842 x 4
+Data archive (stored in DT field): 24625 x 4
 Columns in DT: geo_value, time_value, version, admissions
 ----------
 Public R6 methods: initialize, print, as_of, fill_through_version, 
@@ -704,11 +706,11 @@ Public R6 methods: initialize, print, as_of, fill_through_version,
     4:        ca 2020-02-06 2020-11-16         NA
     5:        ca 2020-02-07 2020-11-16         NA
    ---                                           
-40838:        tx 2023-05-28 2023-05-31   91.57143
-40839:        tx 2023-05-28 2023-06-01   99.14286
-40840:        tx 2023-05-29 2023-05-31   78.85714
-40841:        tx 2023-05-29 2023-06-01   97.42857
-40842:        tx 2023-05-30 2023-06-01   94.85714</code></pre>
+24621:        tx 2023-05-28 2023-05-31         98
+24622:        tx 2023-05-28 2023-06-01         85
+24623:        tx 2023-05-29 2023-05-31         19
+24624:        tx 2023-05-29 2023-06-01         96
+24625:        tx 2023-05-30 2023-06-01         96</code></pre>
 </div>
 </div>
 </section>
