@@ -452,29 +452,29 @@
 <ul>
 <li>Fetch national COVID-19 hospital admissions:</li>
 </ul>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-4_cf0b964d7556aafdc14f751be60c115f">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-4_ef4a961f51bedee1aced197cc170a3e5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb3-2"><a href="#cb3-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">geo_values =</span> <span class="st">"*"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">time_values =</span> <span class="st">"*"</span></span>
 <span id="cb3-8"><a href="#cb3-8"></a>  <span class="co"># (by default, fetches the current version)</span></span>
 <span id="cb3-9"><a href="#cb3-9"></a>)</span>
 <span id="cb3-10"><a href="#cb3-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-5_27a46705104545fb2299bf3d0194b24d">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 152 × 15
+<pre><code># A tibble: 1,411 × 15
   geo_value signal   source geo_type time_type time_value issue        lag value
   &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
-1 us        confirm… hhs    nation   day       2023-01-01 2023-10-03   275  6078
-2 us        confirm… hhs    nation   day       2023-01-02 2023-11-17   319  6727
-3 us        confirm… hhs    nation   day       2023-01-03 2023-11-17   318  6932
-4 us        confirm… hhs    nation   day       2023-01-04 2023-11-11   311  6693
-5 us        confirm… hhs    nation   day       2023-01-05 2023-11-17   316  6609
-# ℹ 147 more rows
+1 us        confirm… hhs    nation   day       2019-12-31 2023-04-13  1199     0
+2 us        confirm… hhs    nation   day       2020-01-01 2023-04-13  1198   132
+3 us        confirm… hhs    nation   day       2020-01-02 2023-04-13  1197   132
+4 us        confirm… hhs    nation   day       2020-01-03 2023-04-13  1196   132
+5 us        confirm… hhs    nation   day       2020-01-04 2023-04-13  1195   132
+# ℹ 1,406 more rows
 # ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
 #   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
 #   sample_size &lt;dbl&gt;</code></pre>
@@ -496,29 +496,29 @@
 <ul>
 <li>Fetch what the query should have looked like back in June (“as of” June 1st):</li>
 </ul>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-6_c46589268ab1868f8c32ada5c6dac2a8">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-6_2e19a08c5925b9e61980ceb668e37028">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb5-2"><a href="#cb5-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
 <span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
 <span id="cb5-5"><a href="#cb5-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
-<span id="cb5-6"><a href="#cb5-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>),</span>
-<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">as_of =</span> <span class="dv">20230601</span></span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="at">geo_values =</span> <span class="st">"*"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">time_values =</span> <span class="st">"*"</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">as_of =</span> <span class="st">"2023-06-01"</span></span>
 <span id="cb5-9"><a href="#cb5-9"></a>)</span>
 <span id="cb5-10"><a href="#cb5-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-7_65b0c02fe20b1f142ec00d4ad63c4ae2">
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 150 × 15
+<pre><code># A tibble: 1,247 × 15
   geo_value signal   source geo_type time_type time_value issue        lag value
   &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
-1 us        confirm… hhs    nation   day       2023-01-01 2023-05-19   138  6058
-2 us        confirm… hhs    nation   day       2023-01-02 2023-06-01   150  6713
-3 us        confirm… hhs    nation   day       2023-01-03 2023-06-01   149  6893
-4 us        confirm… hhs    nation   day       2023-01-04 2023-06-01   148  6657
-5 us        confirm… hhs    nation   day       2023-01-05 2023-06-01   147  6587
-# ℹ 145 more rows
+1 us        confirm… hhs    nation   day       2019-12-31 2023-04-13  1199     0
+2 us        confirm… hhs    nation   day       2020-01-01 2023-04-13  1198   132
+3 us        confirm… hhs    nation   day       2020-01-02 2023-04-13  1197   132
+4 us        confirm… hhs    nation   day       2020-01-03 2023-04-13  1196   132
+5 us        confirm… hhs    nation   day       2020-01-04 2023-04-13  1195   132
+# ℹ 1,242 more rows
 # ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
 #   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
 #   sample_size &lt;dbl&gt;</code></pre>
@@ -593,14 +593,14 @@
 <section id="epi_df-a-snapshot-of-epidata-in-time-1" class="slide level2">
 <h2><code>epi_df</code>: a snapshot of epidata in time</h2>
 <p>Produce an <code>epi_df</code> from <code>epidatr</code> output like so:</p>
-<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-11_11dce5ae51bbb9890459dc32b47ea6c4">
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-11_11c8538f5af3661d582f8817ae48c8a3">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
 <span id="cb9-2"><a href="#cb9-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d"</span>,</span>
 <span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
 <span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
 <span id="cb9-6"><a href="#cb9-6"></a>  <span class="at">geo_values =</span> <span class="st">"ca,fl,ny,tx"</span>,</span>
-<span id="cb9-7"><a href="#cb9-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>)</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="at">time_values =</span> <span class="st">"*"</span></span>
 <span id="cb9-8"><a href="#cb9-8"></a>)</span>
 <span id="cb9-9"><a href="#cb9-9"></a>epi_df <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span></span>
 <span id="cb9-10"><a href="#cb9-10"></a>  <span class="co"># Add NAs to fill gaps, cover same time range for each geo:</span></span>
@@ -617,25 +617,25 @@
 <div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-12_e823384f1b608b6bb41f52f5b4cce632">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>epi_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>An `epi_df` object, 608 x 15 with metadata:
+<pre><code>An `epi_df` object, 5,644 x 15 with metadata:
 * geo_type  = state
 * time_type = day
-* as_of     = 2023-11-17
+* as_of     = 2023-11-19
 
-# A tibble: 608 × 15
-   geo_value time_value signal    source geo_type time_type direction issue     
- * &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;         &lt;dbl&gt; &lt;date&gt;    
- 1 ca        2023-01-01 confirme… hhs    state    day              NA 2023-04-30
- 2 ca        2023-01-02 confirme… hhs    state    day              NA 2023-04-30
- 3 ca        2023-01-03 confirme… hhs    state    day              NA 2023-04-13
- 4 ca        2023-01-04 confirme… hhs    state    day              NA 2023-04-13
- 5 ca        2023-01-05 confirme… hhs    state    day              NA 2023-04-30
- 6 ca        2023-01-06 confirme… hhs    state    day              NA 2023-04-13
- 7 ca        2023-01-07 confirme… hhs    state    day              NA 2023-04-13
- 8 ca        2023-01-08 confirme… hhs    state    day              NA 2023-04-30
- 9 ca        2023-01-09 confirme… hhs    state    day              NA 2023-04-30
-10 ca        2023-01-10 confirme… hhs    state    day              NA 2023-04-13
-# ℹ 598 more rows
+# A tibble: 5,644 × 15
+   geo_value time_value signal source geo_type time_type direction issue 
+ * &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;         &lt;dbl&gt; &lt;date&gt;
+ 1 ca        2019-12-31 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 2 ca        2020-01-01 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 3 ca        2020-01-02 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 4 ca        2020-01-03 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 5 ca        2020-01-04 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 6 ca        2020-01-05 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 7 ca        2020-01-06 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 8 ca        2020-01-07 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+ 9 ca        2020-01-08 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+10 ca        2020-01-09 &lt;NA&gt;   &lt;NA&gt;   &lt;NA&gt;     &lt;NA&gt;             NA NA    
+# ℹ 5,634 more rows
 # ℹ 7 more variables: lag &lt;int&gt;, missing_value &lt;int&gt;, missing_stderr &lt;int&gt;,
 #   missing_sample_size &lt;int&gt;, value &lt;dbl&gt;, stderr &lt;dbl&gt;, sample_size &lt;dbl&gt;</code></pre>
 </div>
