@@ -32,6 +32,8 @@ include-in-header:
 
 CDC and MIDAS Forecasting Meeting --- 21 November 2023
 
+Slides are online at <https://cmu-delphi.github.io/midas-cdc-2023-demo>
+
 ```{r}
 #| include: false
 
@@ -104,7 +106,7 @@ epidata <- pub_covidcast(
   geo_type = "nation",
   time_type = "day",
   geo_values = "us",
-  time_values = epirange(20230101, 20230601)
+  time_values = epirange("2023-01-01", "2023-06-01")
   # (by default, fetches the current version)
 )
 # `epidata` looks like:
@@ -145,7 +147,7 @@ epidata <- pub_covidcast(
   geo_type = "nation",
   time_type = "day",
   geo_values = "us",
-  time_values = epirange(20230101, 20230601),
+  time_values = epirange("2023-01-01", "2023-06-01"),
   as_of = 20230601
 )
 # `epidata` looks like:
@@ -171,10 +173,11 @@ epidata %>%
 - [`fb-survey`](https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html) from (parts of) the [COVID-19 Trends and Impact Survey](https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/) in collaboration with Facebook
     - Signals of public behaviors and beliefs about public health during the pandemic
 
+See also `covidcast_epidata()` or the [COVIDcast web site](https://cmu-delphi.github.io/delphi-epidata/api/covidcast_signals.html) for a listing of other COVIDcast data available.
 
 ## Access more than just COVID data!
 
-Using `avail_endpoints()` you can find a listing of our other endpoints that serve a wide variety of public health data.
+Using `avail_endpoints()` you can find a listing of our other endpoints that serve a wide variety of public health data.  Here we've filtered to non-COVID-specific data.
 
 ```{r}
 #| eval: true
