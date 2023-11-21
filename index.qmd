@@ -105,8 +105,8 @@ epidata <- pub_covidcast(
   signals = "confirmed_admissions_covid_1d",
   geo_type = "nation",
   time_type = "day",
-  geo_values = "us",
-  time_values = epirange("2023-01-01", "2023-06-01")
+  geo_values = "*",
+  time_values = "*"
   # (by default, fetches the current version)
 )
 # `epidata` looks like:
@@ -146,9 +146,9 @@ epidata <- pub_covidcast(
   signals = "confirmed_admissions_covid_1d",
   geo_type = "nation",
   time_type = "day",
-  geo_values = "us",
-  time_values = epirange("2023-01-01", "2023-06-01"),
-  as_of = 20230601
+  geo_values = "*",
+  time_values = "*",
+  as_of = "2023-06-01"
 )
 # `epidata` looks like:
 ```
@@ -232,7 +232,7 @@ tbl <- pub_covidcast(
   geo_type = "state",
   time_type = "day",
   geo_values = "ca,fl,ny,tx",
-  time_values = epirange("2023-01-01", "2023-06-01")
+  time_values = "*"
 )
 epi_df <- tbl %>%
   # Add NAs to fill gaps, cover same time range for each geo:
