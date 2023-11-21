@@ -235,6 +235,7 @@ tbl <- pub_covidcast(
   time_values = "*"
 )
 epi_df <- tbl %>%
+  dplyr::select(geo_value, time_value, admissions = value) %>%
   # Add NAs to fill gaps, cover same time range for each geo:
   tidyr::complete(geo_value, time_value = tidyr::full_seq(time_value, period = 1L)) %>%
   as_epi_df(
