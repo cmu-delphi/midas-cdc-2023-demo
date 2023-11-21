@@ -28,6 +28,71 @@
       margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
       vertical-align: middle;
     }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -320,20 +385,387 @@
       margin-right: 0; 
     }
   </style>
+  <style type="text/css">
+  ul li ul li {
+    font-size: 0.85em;
+  }
+  </style>
 </head>
 <body class="quarto-light">
   <div class="reveal">
     <div class="slides">
 
 
-<section id="placeholder-slide" class="slide level2">
-<h2>Placeholder slide</h2>
+<section id="finding-fetching-and-processing-epidemiological-data-with-epidatr-and-epiprocess" class="slide level2">
+<h2>Finding, fetching, and processing epidemiological data with <code>{epidatr}</code> and <code>{epiprocess}</code></h2>
+<p><br></p>
+<h4 id="delphi-research-group-at-cmu">Delphi Research Group at CMU</h4>
+<h4 id="slides-nat-defries-dmitry-shemetov-logan-brooks-others-on-delphi-tooling-team">Slides: Nat DeFries, Dmitry Shemetov, Logan Brooks, others on Delphi tooling team</h4>
+<p>CDC and MIDAS Forecasting Meeting — 21 November 2023</p>
+</section>
+<section id="the-delphi-epidatr-package-is-a-new-r-front-end-for-the-delphi-epidata-api" class="slide level2">
+<h2>The <a href="https://cmu-delphi.github.io/epidatr/">Delphi <code>{epidatr}</code> package</a> is a new R front-end for the <a href="https://cmu-delphi.github.io/delphi-epidata/">Delphi Epidata API</a></h2>
+<ul>
+<li>streamlines downloading and usage of data from the <a href="https://cmu-delphi.github.io/delphi-epidata/">Delphi Epidata API</a>
+<ul>
+<li>real-time access to epidemiological surveillance data for influenza, COVID-19, and other diseases</li>
+<li>data from both official government sources such as the <a href="https://www.cdc.gov/datastatistics/index.html">CDC</a> and from private partners</li>
+<li>a historical record of all data available, including corrections and updates, which is useful for backtesting of forecasting models.</li>
+</ul></li>
+<li>provides a simple R interface to the API, with functions for downloading data, parsing results, and converting to tidy format.
+<ul>
+<li>the <code>{epidatr}</code> package is a complete rewrite of the <a href="https://cmu-delphi.github.io/covidcast/covidcastR/"><code>{covidcast}</code> package</a> and <code>delphi_epidata.R</code> script, with a focus on speed, reliability, and ease of use</li>
+<li>the {<code>covidcast</code>} package and <code>delphi_epidata.R</code> script are deprecated and will no longer be updated</li>
+</ul></li>
+</ul>
+</section>
+<section id="conveniently-install-in-the-normal-ways" class="slide level2">
+<h2>Conveniently install in the normal ways</h2>
+<ul>
+<li>You can install the stable version of this package from CRAN:</li>
+</ul>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-2_083f2cac466bbe437604b4215a8a800f">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">install.packages</span>(<span class="st">"epidatr"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"epidatr"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a>renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">"epidatr"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Or if you want the development version, install from GitHub:</li>
+</ul>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-3_695101c802c148916cd16d8897b83d9e">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"cmu-delphi/epidatr@dev"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"cmu-delphi/epidatr"</span>, <span class="at">ref =</span> <span class="st">"dev"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3"></a>renv<span class="sc">::</span><span class="fu">install</span>(<span class="st">"cmu-delphi/epidatr@dev"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><code>{epidatr}</code> requires a (free) API key for full functionality
+<ul>
+<li>To generate your key, <a href="https://api.delphi.cmu.edu/epidata/admin/registration_form">register</a> for a pseudo-anonymous account (see the <a href="https://cmu-delphi.github.io/delphi-epidata/api/api_keys.html">general API website</a> for details) and use <code>save_api_key()</code> for help storing the key.</li>
+<li>(Note: we also have private endpoints (those prefixed with <code>pvt_</code>) that require a separate key to be passed as an argument. These endpoints require data use agreements to access.)</li>
+</ul></li>
+</ul>
+<p>:::</p>
+</section>
+<section id="example-hhsnhsn-hospitalization-data" class="slide level2">
+<h2>Example: HHS/NHSN hospitalization data</h2>
+<ul>
+<li>Fetch a seven-day average of national COVID-19 hospital admissions:</li>
+</ul>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-4_af11c14d8b774583d287ec81f406d705">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="dv">20230101</span>, <span class="dv">20230601</span>)</span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="co"># (by default, fetches the current version)</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>)</span>
+<span id="cb3-10"><a href="#cb3-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-5_27a46705104545fb2299bf3d0194b24d">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 152 × 15
+  geo_value signal   source geo_type time_type time_value issue        lag value
+  &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
+1 us        confirm… hhs    nation   day       2023-01-01 2023-10-26   298 6794.
+2 us        confirm… hhs    nation   day       2023-01-02 2023-11-17   319 6810.
+3 us        confirm… hhs    nation   day       2023-01-03 2023-11-17   318 6778.
+4 us        confirm… hhs    nation   day       2023-01-04 2023-11-17   317 6695 
+5 us        confirm… hhs    nation   day       2023-01-05 2023-11-17   316 6585.
+# ℹ 147 more rows
+# ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
+#   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
+#   sample_size &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<!-- ## Example: HHS/NHSN hospitalization data -->
+<!-- ```{r} -->
+<!-- #| echo: false -->
+<!-- #| eval: true -->
+<!-- epidata %>% -->
+<!--   select(geo_value, signal, source, geo_type, time_type, time_value, issue, lag, value, everything()) %>% -->
+<!--   print(n = 5L) -->
+<!-- ``` -->
+<!-- - Note the key columns: `source, signal, geo_value, time_value` -->
+<!-- - `issue` is the date when the row started being valid (when it entered our database^[Usually; exceptions include adding back issues for a new data set and patching to better match upstream history.]) -->
+</section>
+<section id="example-versioned-hhsnhsn-hospitalization-data" class="slide level2">
+<h2>Example: versioned HHS/NHSN hospitalization data</h2>
+<ul>
+<li>Fetch what the query should have looked like back in June (“as of” June 1st):</li>
+</ul>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-6_6445ffd618dd02ca0a9bec2c68395f23">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>epidata <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">geo_type =</span> <span class="st">"nation"</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  <span class="at">geo_values =</span> <span class="st">"us"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="dv">20230101</span>, <span class="dv">20230601</span>),</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">as_of =</span> <span class="dv">20230601</span></span>
+<span id="cb5-9"><a href="#cb5-9"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># `epidata` looks like:</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-7_65b0c02fe20b1f142ec00d4ad63c4ae2">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 150 × 15
+  geo_value signal   source geo_type time_type time_value issue        lag value
+  &lt;chr&gt;     &lt;chr&gt;    &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;     &lt;date&gt;     &lt;date&gt;     &lt;int&gt; &lt;dbl&gt;
+1 us        confirm… hhs    nation   day       2023-01-01 2023-06-01   151 6777 
+2 us        confirm… hhs    nation   day       2023-01-02 2023-06-01   150 6792.
+3 us        confirm… hhs    nation   day       2023-01-03 2023-06-01   149 6758.
+4 us        confirm… hhs    nation   day       2023-01-04 2023-06-01   148 6673 
+5 us        confirm… hhs    nation   day       2023-01-05 2023-06-01   147 6561.
+# ℹ 145 more rows
+# ℹ 6 more variables: direction &lt;dbl&gt;, missing_value &lt;int&gt;,
+#   missing_stderr &lt;int&gt;, missing_sample_size &lt;int&gt;, stderr &lt;dbl&gt;,
+#   sample_size &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<!-- - Note that we have fewer rows now, reflecting the reality of data latency, and that the counts are slightly different, reflecting data revisions. -->
+</section>
+<section id="access-other-useful-data-including-delphi-exclusive-sources" class="slide level2">
+<h2>Access other useful data, including Delphi-exclusive sources</h2>
+<ul>
+<li><a href="https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/chng.html"><code>chng</code></a> from <a href="https://www.changehealthcare.com/">Change Healthcare</a>
+<ul>
+<li>Outpatient COVID and influenza signals from insurance claims</li>
+</ul></li>
+<li><a href="https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/doctor-visits.html"><code>doctor-visits</code></a> from health system partners
+<ul>
+<li>COVID signals from insurance claims</li>
+</ul></li>
+<li><a href="https://cmu-delphi.github.io/delphi-epidata/api/covidcast-signals/fb-survey.html"><code>fb-survey</code></a> from (parts of) the <a href="https://delphi.cmu.edu/blog/2020/08/26/covid-19-symptom-surveys-through-facebook/">COVID-19 Trends and Impact Survey</a> in collaboration with Facebook
+<ul>
+<li>Signals of public behaviors and beliefs about public health during the pandemic</li>
+</ul></li>
+</ul>
+</section>
+<section id="access-more-than-just-covid-data" class="slide level2">
+<h2>Access more than just COVID data!</h2>
+<p>Using <code>avail_endpoints()</code> you can find a listing of our other endpoints that serve a wide variety of public health data.</p>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-8_35f9dd8a4776d97571f7f8607f897ad0">
+<div class="cell-output cell-output-stdout">
+<pre><code>   Endpoint               Description                                
+ 1 pub_delphi()           Delphi's ILINet forecasts                  
+ 2 pub_dengue_nowcast()   Delphi's PAHO Dengue nowcast               
+ 3 pub_ecdc_ili()         ECDC ILI data                              
+ 4 pub_flusurv()          FluSurv hospitalization data               
+ 5 pub_fluview()          FluView ILINet data                        
+ 6 pub_fluview_clinical() FluView virological data from clinical labs
+ 7 pub_fluview_meta()     FluView metadata                           
+ 8 pub_gft()              Google Flu Trends data                     
+ 9 pub_kcdc_ili()         KCDC ILI data                              
+10 pub_meta()             API metadata                               
+11 pub_nidss_dengue()     NIDSS dengue data                          
+12 pub_nidss_flu()        NIDSS flu data                             
+13 pub_nowcast()          Delphi's ILI nowcast                       
+14 pub_paho_dengue()      PAHO Dengue data                           
+15 pub_wiki()             Wikipedia access data                      </code></pre>
+</div>
+</div>
+</section>
+<section id="consider-subscribing-to-the-delphi-api-mailing-list-to-be-notified-of-package-updates-new-data-sources-corrections-and-other-updates" class="slide level2">
+<h2>Consider subscribing to the <a href="https://lists.andrew.cmu.edu/mailman/listinfo/delphi-covidcast-api">Delphi API mailing list</a> to be notified of package updates, new data sources, corrections, and other updates</h2>
+</section>
+<section id="the-epiprocess-package-helps-work-with-epidemic-datasets" class="slide level2">
+<h2>The <code>{epiprocess}</code> package helps work with epidemic datasets</h2>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-10_1b09eed77cdd08f0dd25826ef40aaa00">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>pak<span class="sc">::</span><span class="fu">pkg_install</span>(<span class="st">"cmu-delphi/epiprocess@main"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>provides common data structures for epidemiological data sets measured over space and time</li>
+<li>provides utilities for basic signal processing tasks</li>
+</ul>
+</section>
+<section id="epi_df-a-snapshot-of-epidata-in-time" class="slide level2">
+<h2><code>epi_df</code>: a snapshot of epidata in time</h2>
+<ul>
+<li>represents the most up-to-date values of dataset as of a given time</li>
+<li>a subclassed tibble with two required columns: <code>geo_value</code> and <code>time_value</code></li>
+<li>and associated metadata: <code>geo_type</code>, <code>time_type</code>, <code>other_keys</code>, <code>as_of</code></li>
+<li>can have any number of other columns, which we call signal (or measured) variables</li>
+</ul>
+</section>
+<section id="epi_df-a-snapshot-of-epidata-in-time-1" class="slide level2">
+<h2><code>epi_df</code>: a snapshot of epidata in time</h2>
+<p>Produce an <code>epi_df</code> from <code>epidatr</code> output like so:</p>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-11_181f110a35299ace2c82efe802469b10">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
+<span id="cb9-2"><a href="#cb9-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6"></a>  <span class="at">geo_values =</span> <span class="st">"ca,fl,ny,tx"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7"></a>  <span class="at">time_values =</span> <span class="fu">epirange</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-06-01"</span>)</span>
+<span id="cb9-8"><a href="#cb9-8"></a>)</span>
+<span id="cb9-9"><a href="#cb9-9"></a>epi_df <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10"></a>  <span class="co"># Add NAs to fill gaps, cover same time range for each geo:</span></span>
+<span id="cb9-11"><a href="#cb9-11"></a>  tidyr<span class="sc">::</span><span class="fu">complete</span>(geo_value, <span class="at">time_value =</span> tidyr<span class="sc">::</span><span class="fu">full_seq</span>(time_value, <span class="at">period =</span> 1L)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a>  <span class="fu">as_epi_df</span>(</span>
+<span id="cb9-13"><a href="#cb9-13"></a>    <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14"></a>    <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15"></a>    <span class="at">as_of =</span> <span class="fu">max</span>(tbl<span class="sc">$</span>issue)</span>
+<span id="cb9-16"><a href="#cb9-16"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="epi_df-a-snapshot-of-epidata-in-time-2" class="slide level2">
+<h2><code>epi_df</code>: a snapshot of epidata in time</h2>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-12_e823384f1b608b6bb41f52f5b4cce632">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>epi_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An `epi_df` object, 608 x 15 with metadata:
+* geo_type  = state
+* time_type = day
+* as_of     = 2023-11-17
+
+# A tibble: 608 × 15
+   geo_value time_value signal    source geo_type time_type direction issue     
+ * &lt;chr&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;  &lt;fct&gt;    &lt;fct&gt;         &lt;dbl&gt; &lt;date&gt;    
+ 1 ca        2023-01-01 confirme… hhs    state    day              NA 2023-04-30
+ 2 ca        2023-01-02 confirme… hhs    state    day              NA 2023-04-30
+ 3 ca        2023-01-03 confirme… hhs    state    day              NA 2023-04-30
+ 4 ca        2023-01-04 confirme… hhs    state    day              NA 2023-04-30
+ 5 ca        2023-01-05 confirme… hhs    state    day              NA 2023-04-30
+ 6 ca        2023-01-06 confirme… hhs    state    day              NA 2023-04-30
+ 7 ca        2023-01-07 confirme… hhs    state    day              NA 2023-04-30
+ 8 ca        2023-01-08 confirme… hhs    state    day              NA 2023-04-30
+ 9 ca        2023-01-09 confirme… hhs    state    day              NA 2023-04-30
+10 ca        2023-01-10 confirme… hhs    state    day              NA 2023-04-30
+# ℹ 598 more rows
+# ℹ 7 more variables: lag &lt;int&gt;, missing_value &lt;int&gt;, missing_stderr &lt;int&gt;,
+#   missing_sample_size &lt;int&gt;, value &lt;dbl&gt;, stderr &lt;dbl&gt;, sample_size &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="epi_archive-a-collection-of-historical-epidata" class="slide level2">
+<h2><code>epi_archive</code>: a collection of historical epidata</h2>
+<ul>
+<li>represents the most up-to-date values of dataset as of various given times</li>
+<li>required input columns: <code>geo_value</code>, <code>time_value</code>, <code>version</code></li>
+<li>can have any number of other key or signal/measured columns</li>
+</ul>
+</section>
+<section id="epi_archive-a-collection-of-historical-epidata-1" class="slide level2">
+<h2><code>epi_archive</code>: a collection of historical epidata</h2>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-13_3351924c8571a1fbf7439912bcc4e502">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>tbl <span class="ot">&lt;-</span> <span class="fu">pub_covidcast</span>(</span>
+<span id="cb12-2"><a href="#cb12-2"></a>  <span class="at">source =</span> <span class="st">"hhs"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="at">signals =</span> <span class="st">"confirmed_admissions_covid_1d_7dav"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="at">geo_type =</span> <span class="st">"state"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="at">time_type =</span> <span class="st">"day"</span>,</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="at">geo_values =</span> <span class="st">"ca,fl,ny,tx"</span>,</span>
+<span id="cb12-7"><a href="#cb12-7"></a>  <span class="at">time_values =</span> <span class="st">"*"</span>, <span class="co"># "*" = all time values</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>  <span class="at">issues =</span> <span class="fu">epirange</span>(<span class="st">"1234-01-01"</span>, <span class="st">"2023-06-01"</span>) <span class="co"># start of range must be before data set start</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>)</span>
+<span id="cb12-10"><a href="#cb12-10"></a>epi_archive <span class="ot">&lt;-</span> tbl <span class="sc">%&gt;%</span></span>
+<span id="cb12-11"><a href="#cb12-11"></a>  <span class="fu">select</span>(</span>
+<span id="cb12-12"><a href="#cb12-12"></a>    geo_value, time_value,</span>
+<span id="cb12-13"><a href="#cb12-13"></a>    <span class="at">version =</span> issue, <span class="at">admissions =</span> value</span>
+<span id="cb12-14"><a href="#cb12-14"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb12-15"><a href="#cb12-15"></a>  <span class="co"># don't try to `complete` here; `complete` after `epix_as_of` or inside `epix_slide` computations</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a>  <span class="fu">as_epi_archive</span>(<span class="at">compactify =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="epi_archive-a-collection-of-historical-epidata-2" class="slide level2">
+<h2><code>epi_archive</code>: a collection of historical epidata</h2>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-14_031abca10029f4a3c2890eda77dbbf4d">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>epi_archive</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>An `epi_archive` object, with metadata:
+* geo_type  = state
+* time_type = day
+----------
+* min time value = 2020-01-06
+* max time value = 2023-05-30
+* first version with update = 2020-11-16
+* last version with update = 2023-06-01
+* No clobberable versions
+* versions end   = 2023-06-01
+----------
+Data archive (stored in DT field): 40842 x 4
+Columns in DT: geo_value, time_value, version, admissions
+----------
+Public R6 methods: initialize, print, as_of, fill_through_version, 
+                   truncate_versions_after, merge, group_by, slide, clone</code></pre>
+</div>
+</div>
+</section>
+<section id="epi_archive-a-collection-of-historical-epidata-3" class="slide level2">
+<h2><code>epi_archive</code>: a collection of historical epidata</h2>
+<div class="cell" data-hash="index_cache/revealjs/unnamed-chunk-15_060382acf1948b932ae39c271d2afd85">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>epi_archive<span class="sc">$</span>DT</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       geo_value time_value    version admissions
+    1:        ca 2020-02-03 2020-11-16         NA
+    2:        ca 2020-02-04 2020-11-16         NA
+    3:        ca 2020-02-05 2020-11-16         NA
+    4:        ca 2020-02-06 2020-11-16         NA
+    5:        ca 2020-02-07 2020-11-16         NA
+   ---                                           
+40838:        tx 2023-05-28 2023-05-31   91.57143
+40839:        tx 2023-05-28 2023-06-01   99.14286
+40840:        tx 2023-05-29 2023-05-31   78.85714
+40841:        tx 2023-05-29 2023-06-01   97.42857
+40842:        tx 2023-05-30 2023-06-01   94.85714</code></pre>
+</div>
+</div>
+</section>
+<section id="some-epi_slide-use-cases" class="slide level2">
+<h2>Some <code>epi_slide</code> use cases</h2>
+<ul>
+<li>Calculate rolling or running averages, sums, other statistics</li>
+<li>Calculate custom growth rates, categorical trend definitions, smoothing (see also <code>epiprocess::growth_rate</code>, <code>epipredict::step_lag_difference</code>)</li>
+<li>(Perform latency&amp;revision-naive forecaster backtesting)</li>
+</ul>
+</section>
+<section id="some-epix_as_of-epix_slide-use-cases" class="slide level2">
+<h2>Some <code>epix_as_of</code>, <code>epix_slide</code> use cases</h2>
+<ul>
+<li>Better backtesting: generate pseudoprospective forecasts</li>
+<li>Plot past forecast against data available at generation time</li>
+<li>Plot evolution of how a time series was reported</li>
+<li>Analyze reporting latency, revision behavior, trends</li>
+<li>Improve forecasts when revisions are significant: prepare “version-analogous” training set predictor data</li>
+</ul>
+</section>
+<section id="epi_df-and-epi_archive-utilities" class="slide level2">
+<h2><code>epi_df</code> and <code>epi_archive</code> utilities</h2>
+<ul>
+<li><code>epi_df</code>
+<ul>
+<li><code>group_by()</code> - standard grouped operations</li>
+<li><code>epi_slide()</code> - perform (grouped) time-window computations on an <code>epi_df</code></li>
+<li><code>epi_cor()</code> - compute correlations between variables in an <code>epi_df</code></li>
+</ul></li>
+<li><code>epi_archive</code>
+<ul>
+<li><code>epix_merge()</code> - merge/join two <code>epi_archive</code> objects</li>
+<li><code>epix_as_of()</code> - generate a snapshot <code>epi_df</code> from an <code>epi_archive</code> object</li>
+<li><code>group_by()</code> - standard grouped operations</li>
+<li><code>epix_slide()</code> - perform (grouped) time-windowed computations on several versions</li>
+</ul></li>
+<li>And more, including outlier detection<sup>1</sup>, growth rate calculation.</li>
+</ul>
+<aside><ol class="aside-footnotes"><li id="fn1"><p>functionality contributed by Evan Ray</p></li></ol></aside></section>
+<section id="resources" class="slide level2">
+<h2>Resources</h2>
+<ul>
+<li><a href="https://cmu-delphi.github.io/epidatr/index.html">epidatr (stable) documentation</a></li>
+<li><a href="https://cmu-delphi.github.io/epidatr/dev/index.html">epidatr (dev) documentation</a></li>
+<li><a href="https://cmu-delphi.github.io/delphi-epidata/api/covidcast_signals.html">COVIDcast data source listing</a></li>
+<li><a href="https://cmu-delphi.github.io/delphi-epidata/api/README.html">Other Delphi Epidata API endpoints</a></li>
+<li><a href="https://cmu-delphi.github.io/epiprocess/index.html">epiprocess documentation</a></li>
+<li><a href="https://cmu-delphi.github.io/delphi-tooling-book/epiprocess.html">Delphi Epidemiological Forecasting Book</a></li>
+</ul>
 
 
 <img src="gfx/delphi.jpg" class="slide-logo r-stretch"><div class="footer footer-default">
 <p>Packages for forecasting — <span class="smaller">cmu-delphi.github.io/midas-cdc-2023-demo</span></p>
 </div>
 </section>
+
     </div>
   </div>
 
@@ -547,6 +979,44 @@
         ]
       });
     </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
     <script id="quarto-html-after-body" type="application/javascript">
     window.document.addEventListener("DOMContentLoaded", function (event) {
       const toggleBodyColorMode = (bsSheetEl) => {
